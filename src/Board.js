@@ -160,12 +160,12 @@
       var size = this.get('n');
       var counter = null;
       if (majorDiagonalColumnIndexAtFirstRow === 0) {
-        for (var i = 0; i < size - 1; i++) {           // starting point of each diag
+        for (var i = 0; i < size; i++) {           // starting point of each diag
           counter = 0;
           console.log('diagonal', i, 'at row0');
-          for (var j = i; j < size - i; j++){      //set row index
+          for (var j = i; j < size; j++){      //set row index
             var myRow = this.get(j);
-            console.log("diagonal=",i , "row-j=", j, "value =", myRow[j]," counter=", counter);
+            console.log("diagonal=",i , "row-j=", j, "value =", myRow[j-i]," counter=", counter);
             if (myRow[j-i] === 1) {
               counter++;
             }
