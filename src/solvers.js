@@ -42,10 +42,10 @@ window.countNRooksSolutions = function(n){
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n){
-  var solution = undefined; //fixme
+  var solution = []; 
+  var row = [];
   var positions = [];
   var remainder = null;
-  console.log('check n', n);
 
   if (n === 1) solution = [[1]];
 
@@ -54,7 +54,9 @@ window.findNQueensSolution = function(n){
   if (n === 3) solution = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
   if (n >= 4) {
+    //hueristic approach to make position list
     remainder = n % 6;
+
     if (remainder !== 2 || remainder !== 3){
       for (var i = 2; i <= n; i += 2){
         positions.push(i);
@@ -63,9 +65,25 @@ window.findNQueensSolution = function(n){
         positions.push(i);
       }  
     }
-    console.log(positions);
-  }
 
+    if (remainder === 2){
+      var index = _.indexOf(positions, 1);
+      positions[index] = 3;
+      positions[index+1] = 1;
+      positions.splice(index+2, 1);
+      positions.push(5);
+    }
+    // Should add code for condition remainder === 3 for general solution
+
+    // creating matrix
+    for (var x = 0; x < n; x++) {           // row pos 
+      for (var y = 0; y < n; y++) {         // col pos
+        ( y === positions[x]) ? row.push(1) : row.push(0);
+      }
+      solution.push(row);
+      row = [];
+    }
+  }
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
