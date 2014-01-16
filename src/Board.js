@@ -194,12 +194,9 @@
           counter = 0;
           for (var row = diag; row < size; row++){      //set row index
             var myRow = this.get(row);
-            console.log("diagonal=",diag , "row-j=", row, "myRow", myRow);
-            console.log("myRow[", row, '-',  diag, '+', row, ']', (start + diag - row));
           
             if (myRow[start + diag - row] === 1) {
               counter++;
-              console.log('counter', counter);
             }
           }
           if (counter > 1) keepCounters = counter;
@@ -227,7 +224,6 @@
     hasAnyMinorDiagonalConflicts: function(){
      var size = this.get('n');
       for (var i = 0; i < size; i++) {   // here i represents indexAtFirstRow (above)
-        console.log('this.hasMinorDiagonalConflictAt(i)' , i, this.hasMinorDiagonalConflictAt(i));
         if(this.hasMinorDiagonalConflictAt(i)) return true;
       }
       return false;
