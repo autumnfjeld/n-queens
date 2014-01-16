@@ -76,7 +76,7 @@
 
     // ROWS - run from left to right
     // --------------------------------------------------------------
-    // 
+    //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex){
       var myRow = this.get(rowIndex);
@@ -104,7 +104,7 @@
 
     // COLUMNS - run from top to bottom
     // --------------------------------------------------------------
-    // 
+    //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex){
       var size = this.get('n');
@@ -129,51 +129,40 @@
       return false; // fixme
     },
 
-
-
-    // Major Diagonals - go from top-left to bottom-right
-    // --------------------------------------------------------------
-    // 
-    // test if a specific major diagonal on this board contains a conflict
-    // hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
-    //   var size = this.get('n');
-    //   var counter = null;
-    //   if (majorDiagonalColumnIndexAtFirstRow === 0) {
-    //     for (var i = 0; i < size - 1; i++) {           // starting point of each diag
-    //       counter = 0;
-    //       console.log(' diagonal', i, 'at row0');
-    //       for (var j = i; j < size - i; j++){      //set row index
-    //         for (var k = 0; k < size - j; k++) {    // col index
-    //           var myRow = this.get(j);
-    //           console.log("i=",i, " row-j=",j," col-k=",k, "value =", myRow[k]," counter=", counter);
-    //           if (myRow[k] === 1) {
-    //             counter++;
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    //   return (counter > 1);
-    // },
-
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
       var size = this.get('n');
       var counter = null;
+      var keepCounters = null;
+
+      if (majorDiagonalColumnIndexAtFirstRow === size -1) return false;
+
       if (majorDiagonalColumnIndexAtFirstRow === 0) {
-        for (var i = 0; i < size; i++) {           // starting point of each diag
+        for (var diag = 0; diag < size - 1; diag++) {   // starting point of each diag
           counter = 0;
-          console.log('diagonal', i, 'at row0');
-          for (var j = i; j < size; j++){      //set row index
-            var myRow = this.get(j);
-            console.log("diagonal=",i , "row-j=", j, "value =", myRow[j-i]," counter=", counter);
-            if (myRow[j-i] === 1) {
+          for (var row = diag; row < size; row++){      //set row index
+            var myRow = this.get(row);
+            if (myRow[row - diag] === 1) {
               counter++;
             }
           }
+          if (counter > 1) keepCounters = counter;
         }
       }
-      return (counter > 1);
+
+      if (majorDiagonalColumnIndexAtFirstRow > 0 && majorDiagonalColumnIndexAtFirstRow < size -1 ) {
+        var start = majorDiagonalColumnIndexAtFirstRow; // set starting point
+          for (var row = 0; row < size - start; row++){      //set row index
+            var myRow = this.get(row);
+            if (myRow[row + start] === 1) {
+              counter++;
+            }
+          }
+          if (counter > 1) keepCounters = counter;
+        }
+
+      return (keepCounters > 1);
     },
+
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function(){
       var size = this.get('n');
@@ -182,22 +171,66 @@
           return true;
         }
       }
-      return false; 
+      return false;
     },
 
 
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
-    // 
+    //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
-      return false; // fixme
+      var size = this.get('n');
+      var counter = 0;
+      var keepCounters = 0;
+      var start = minorDiagonalColumnIndexAtFirstRow; // set starting point
+
+
+      if (minorDiagonalColumnIndexAtFirstRow === 0) return false;
+
+      if (minorDiagonalColumnIndexAtFirstRow === size - 1) {
+        for (var diag = 0; diag < size - 1; diag++) {   // starting point of each diag
+          counter = 0;
+          for (var row = diag; row < size; row++){      //set row index
+            var myRow = this.get(row);
+            console.log("diagonal=",diag , "row-j=", row, "myRow", myRow);
+            console.log("myRow[", row, '-',  diag, '+', row, ']', (start + diag - row));
+          
+            if (myRow[start + diag - row] === 1) {
+              counter++;
+              console.log('counter', counter);
+            }
+          }
+          if (counter > 1) keepCounters = counter;
+        }
+      }
+
+      if (minorDiagonalColumnIndexAtFirstRow > 0 && minorDiagonalColumnIndexAtFirstRow < size -1){
+          for (var row = 0; row <= start ; row++){      //set row index
+            var myRow = this.get(row);
+
+            if (myRow[start - row] === 1) {           // specify index/col or row
+              counter++;
+            }
+          }
+          if (counter > 1) {
+            keepCounters = counter;
+          }
+      }
+
+      return (keepCounters > 1); // fixme
+
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function(){
-      return false; // fixme
+     var size = this.get('n');
+      for (var i = 0; i < size; i++) {   // here i represents indexAtFirstRow (above)
+        console.log('this.hasMinorDiagonalConflictAt(i)' , i, this.hasMinorDiagonalConflictAt(i));
+        if(this.hasMinorDiagonalConflictAt(i)) return true;
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
